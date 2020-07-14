@@ -1,8 +1,9 @@
-FROM alpine:3.7
+From golang:1.13-alpine
 ENV GCSPROXY_VERSION=0.3.0
-RUN apk add --update ca-certificates
-RUN apk add --no-cache --virtual .build-deps ca-certificates wget \
-  && wget https://github.com/daichirata/gcsproxy/releases/download/v${GCSPROXY_VERSION}/gcsproxy_${GCSPROXY_VERSION}_amd64_linux -O /usr/local/bin/gcsproxy \
-  && chmod +x /usr/local/bin/gcsproxy
 
-CMD ["gcsproxy"]
+WORKDIR /app
+COPY . .
+RUN apk add --no-cache make \
+  && make bin/gcsproxy \
+  && cp bin/gcsproxy /usr/local/bin/gcsproxy \
+  && chmod +x /usr/local/bin/gcsproxy
